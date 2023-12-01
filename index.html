@@ -16,123 +16,103 @@
     <div class="iot-layout">
       <div class="container">
         <div class="iot-title my-4">
-          <h1>Greenhouse Control Panel</h1>
+          <h1 class="text-center">
+            <span class="text-success">Greenhouse</span> Control Panel
+          </h1>
         </div>
         <hr class="mb-4" />
         <section class="iot-section">
-          <h2 class="text-center my-3">Sensors</h2>
           <div class="row">
             <div class="col-md-6">
-              <div class="card">
-                <div class="card-body my-5">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="title text-center"><b>Temperature</b></div>
-                      <p
-                        class="iot-light-value text-success"
-                        id="temperature_value"
-                      >
-                        235
-                      </p>
+              <h2 class="text-center mb-5 text-danger">Sensors</h2>
+              <div class="col-md-12 mb-3">
+                <div class="card">
+                  <div class="card-body my-3">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="title text-center"><b>Temperature</b></div>
+                        <p
+                          class="iot-light-value text-success"
+                          id="temperature_value"
+                        >
+                          53
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="title text-center"><b>Humidity</b></div>
+                        <p
+                          class="iot-light-value text-primary"
+                          id="humidity_value"
+                        >
+                          427
+                        </p>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="title text-center"><b>Humidity</b></div>
-                      <p
-                        class="iot-light-value text-primary"
-                        id="humidity_value"
-                      >
-                        701
-                      </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body my-3">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="title text-center"><b>Light</b></div>
+                        <p
+                          class="iot-light-value text-warning"
+                          id="light_value"
+                        >
+                          235
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="title text-center"><b>Water</b></div>
+                        <p class="iot-light-value text-danger" id="water_value">
+                          701
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="card">
-                <div class="card-body my-5">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="title text-center"><b>Photoresistor</b></div>
-                      <p
-                        class="iot-light-value text-success"
-                        id="photo_resistor_value"
-                      >
-                        235
-                      </p>
+              <h2 class="text-center mb-5 text-primary">Actuators</h2>
+              <div class="row my-4">
+                <div class="col-md-12">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <div class="row">
+                        <div class="col-md-6">DC Motor</div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                          <button
+                            id="motorBtn"
+                            type="button"
+                            class="btn-primary btn"
+                            onclick="onClickMotor();"
+                          >
+                            OFF
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                    <div class="list-group-item">
+                      <div class="row">
+                        <div class="col-md-6">Lamp</div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                          <button
+                            id="lampBtn"
+                            type="button"
+                            class="btn-primary btn"
+                            onclick="onClickLamp();"
+                          >
+                            OFF
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="title text-center"><b>Soil Moisture</b></div>
-                      <p
-                        class="iot-light-value text-primary"
-                        id="soil_moisture_value"
-                      >
-                        701
-                      </p>
-                    </div>
-                  </div>
+                  </ul>
                 </div>
               </div>
-            </div>
-          </div>
-          <h2 class="text-center my-5">Actuators</h2>
-          <div class="row my-4">
-            <div class="col-md-4">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <div class="row">
-                    <div class="col-md-6">Roof Motor</div>
-                    <div class="col-md-6 d-flex justify-content-end">
-                      <button
-                        id="roofBtn"
-                        type="button"
-                        class="btn-success btn"
-                        onclick="onClickRoof();"
-                      >
-                        OFF
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-4">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <div class="row">
-                    <div class="col-md-6">Servo Motor</div>
-                    <div class="col-md-6 d-flex justify-content-end">
-                      <button
-                        id="servoBtn"
-                        type="button"
-                        class="btn-success btn"
-                        onclick="onClickServo();"
-                      >
-                        OFF
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-4">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <div class="row">
-                    <div class="col-md-6">Water Pump</div>
-                    <div class="col-md-6 d-flex justify-content-end">
-                      <button
-                        id="waterBtn"
-                        type="button"
-                        class="btn-success btn"
-                        onclick="onClickWater();"
-                      >
-                        OFF
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              </ul>
             </div>
           </div>
         </section>

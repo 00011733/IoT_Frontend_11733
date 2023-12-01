@@ -1,16 +1,11 @@
 let humidity = 0;
 var temperature = 0;
-var photoResistor = 0;
-var soilMoisture = 0;
-
-var waterPumpMotorValue = 0; // false
-var servoMotorValue = 0;
-var roofMotorValue = 0;
-
-var roofBtnId = document.getElementById("roofBtn");
-var servoBtnId = document.getElementById("servoBtn");
-var waterBtnId = document.getElementById("waterBtn");
-var xyValues = [{ x: humidity, y: temperature }];
+var light = 0;
+var water = 0;
+var motorValue = false; // false by default
+var lamp = false; // false by default
+var motorBtnId = document.getElementById("motorBtn");
+var lampBtnId = document.getElementById("lampBtn");
 
 const firebaseConfig = {
   apiKey: "AIzaSyAt8-rsXFpMZ_GvI7t3hVCaRu7Yp6oBkVs",
@@ -28,19 +23,18 @@ var database = firebase.database();
 // Sensors
 var dbHumidity = database.ref("Humid");
 var dbTemperature = database.ref("Temperature");
-var dbPhotoResistor = database.ref("Light");
-var dbSoilMoisture = database.ref("Water");
-var dbSoilMoisture = database.ref("Motion");
+var dbLight = database.ref("Light");
+var dbWater = database.ref("Water");
+var dbMotion = database.ref("Motion");
 
 // Activators
-var dbRoofMotorStatus = database.ref("roofMotorStatus");
-var dbServoMotorStatus = database.ref("servoMotorStatus");
-var dbWaterPumpStatus = database.ref("waterPumpStatus");
+var dbMotorStatus = database.ref("motorStatus");
+var dbLamp = database.ref("Lamp");
 
 // Fetch the data for Sensors
 dbHumidity.on("value", function (getdata1) {
   humidity = getdata1.val();
-  document.getElementById("humidity_value").innerHTML = humidity;
+  document.getElementById("humidity_value").innerHTML = humidity + "%";
 });
 
 dbTemperature.on("value", function (getdata2) {
@@ -49,86 +43,80 @@ dbTemperature.on("value", function (getdata2) {
     temperature + "&#8451;";
 });
 
-dbPhotoResistor.on("value", function (getdata2) {
-  photoResistor = getdata2.val();
-  document.getElementById("photo_resistor_value").innerHTML = photoResistor;
+dbLight.on("value", function (getdata2) {
+  light = getdata2.val();
+  document.getElementById("light_value").innerHTML = light;
 });
 
-dbSoilMoisture.on("value", function (getdata2) {
-  soilMoisture = getdata2.val();
-  document.getElementById("soil_moisture_value").innerHTML = soilMoisture + "%";
+dbWater.on("value", function (getdata2) {
+  water = getdata2.val();
+  document.getElementById("water_value").innerHTML = water + "%";
 });
 
 // Fetch the data for Activators
-dbRoofMotorStatus.on("value", function (getdata2) {
-  temperature = getdata2.val();
-  //document.getElementById('temperature').innerHTML = temp + "&#8451;";
+dbMotorStatus.on("value", function (getdata2) {
+  motorValue = getdata2.val();
+  console.log("Motor status 2: ", motorValue);
 });
 
-dbServoMotorStatus.on("value", function (getdata2) {
-  photoResistor = getdata2.val();
-  //document.getElementById('photoResistor').innerHTML = temp + "&#8451;";
+dbLamp.on("value", function (getdata2) {
+  lamp = getdata2.val();
+  console.log("Lamp 2: ", lamp);
 });
 
-dbWaterPumpStatus.on("value", function (getdata2) {
-  soilMoisture = getdata2.val();
-  //document.getElementById('soilMoisture').innerHTML = temp + "&#8451;";
-});
+//motor
+motorAction(motorValue);
 
-roofMotor(roofMotorValue);
-servoMotor(servoMotorValue);
-waterMotor(waterPumpMotorValue);
-
-function roofMotor(value) {
+function motorAction(value) {
   if (value == 1) {
-    roofBtnId.classList.add("btn-success");
-    roofBtnId.classList.remove("btn-outline-danger");
-    roofBtnId.innerHTML = "ON";
+    motorBtnId.classList.add("btn-primary");
+    motorBtnId.classList.remove("btn-outline-danger");
+    motorBtnId.innerHTML = "ON";
   } else {
-    roofBtnId.classList.remove("btn-success");
-    roofBtnId.classList.add("btn-outline-danger");
-    roofBtnId.innerHTML = "OFF";
+    motorBtnId.classList.remove("btn-primary");
+    motorBtnId.classList.add("btn-outline-danger");
+    motorBtnId.innerHTML = "OFF";
   }
 }
 
-function servoMotor(value) {
+function onClickMotor() {
+  sendMotorData(!motorValue);
+  setTimeout(() => {
+    motorAction(motorValue);
+  }, 100);
+}
+
+function sendMotorData(value) {
+  firebase.database().ref("motorStatus").set(value);
+}
+
+// lamp
+lampAction(lamp);
+
+function lampAction(value) {
   if (value == 1) {
-    servoBtnId.classList.add("btn-success");
-    servoBtnId.classList.remove("btn-outline-danger");
-    servoBtnId.innerHTML = "ON";
+    lampBtnId.classList.add("btn-primary");
+    lampBtnId.classList.remove("btn-outline-danger");
+    lampBtnId.innerHTML = "ON";
   } else {
-    servoBtnId.classList.remove("btn-success");
-    servoBtnId.classList.add("btn-outline-danger");
-    servoBtnId.innerHTML = "OFF";
+    lampBtnId.classList.remove("btn-primary");
+    lampBtnId.classList.add("btn-outline-danger");
+    lampBtnId.innerHTML = "OFF";
   }
 }
 
-function waterMotor(value) {
-  if (value == 1) {
-    waterBtnId.classList.add("btn-success");
-    waterBtnId.classList.remove("btn-outline-danger");
-    waterBtnId.innerHTML = "ON";
-  } else {
-    waterBtnId.classList.remove("btn-success");
-    waterBtnId.classList.add("btn-outline-danger");
-    waterBtnId.innerHTML = "OFF";
-  }
+function onClickLamp() {
+  sendLampData(!lamp);
+  setTimeout(() => {
+    lampAction(lamp);
+  }, 100);
 }
 
-function onClickRoof() {
-  roofValue = !roofMotorValue;
-  roofMotor(roofValue);
+function sendLampData(value) {
+  firebase.database().ref("Lamp").set(value);
 }
 
-function onClickServo() {
-  servoValue = !roofMotorValue;
-  servoMotor(servoValue);
-}
-
-function onClickWater() {
-  waterValue = !roofMotorValue;
-  waterMotor(waterValue);
-}
+console.log("Motor status: ", motorValue);
 
 // function press() {
 //     index++;
@@ -141,28 +129,3 @@ function onClickWater() {
 //     document.getElementById('led').innerHTML="turn on";
 // }
 // }
-
-/* <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyA0vUouXw1ax_9CfdIO55LX0LEdAi0fhpE",
-    authDomain: "iot-cw-00011581-6458a.firebaseapp.com",
-    databaseURL: "https://iot-cw-00011581-6458a-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "iot-cw-00011581-6458a",
-    storageBucket: "iot-cw-00011581-6458a.appspot.com",
-    messagingSenderId: "602842487625",
-    appId: "1:602842487625:web:7c677ff1a91d16bb279898",
-    measurementId: "G-B03YWK1WBK"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script> */
