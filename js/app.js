@@ -67,7 +67,7 @@ dbLamp.on("value", function (getdata2) {
 //motor
 setTimeout(() => {
   motorAction(motorValue);
-}, 100);
+}, 1500);
 
 function motorAction(value) {
   if (value == 1) {
@@ -95,7 +95,7 @@ function sendMotorData(value) {
 // lamp
 setTimeout(() => {
   lampAction(lamp);
-}, 100);
+}, 1500);
 
 function lampAction(value) {
   if (value == 1) {
