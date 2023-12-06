@@ -2,8 +2,8 @@ let humidity = 0;
 var temperature = 0;
 var light = 0;
 var water = 0;
-var motorValue = false; // false by default
-var lamp = false; // false by default
+var motorValue = 0; // false by default
+var lamp = 0; // false by default
 var motorBtnId = document.getElementById("motorBtn");
 var lampBtnId = document.getElementById("lampBtn");
 
@@ -50,7 +50,12 @@ dbLight.on("value", function (getdata2) {
 
 dbWater.on("value", function (getdata2) {
   water = getdata2.val();
-  document.getElementById("water_value").innerHTML = water + "%";
+  document.getElementById("water_value").innerHTML = water;
+});
+
+dbMotion.on("value", function (getdata2) {
+  motion = getdata2.val();
+  document.getElementById("motion_value").innerHTML = motion;
 });
 
 // Fetch the data for Activators
@@ -82,7 +87,11 @@ function motorAction(value) {
 }
 
 function onClickMotor() {
-  sendMotorData(!motorValue);
+  if (motorValue == 1) {
+    sendMotorData(0);
+  } else {
+    sendMotorData(1);
+  }
   setTimeout(() => {
     motorAction(motorValue);
   }, 100);
